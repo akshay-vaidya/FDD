@@ -12,16 +12,18 @@ from keras.models import load_model
 
 
 def build_model(max_features, maxlen):
-    """Build LSTM model"""
     model = Sequential()
     model.add(Embedding(max_features, 128, input_length=75))
-    model.add(LSTM(128))
-    model.add(Dropout(0.5))
-    model.add(Dense(2))
-    model.add(Activation('softmax'))
+    model.add(Convolution1D(64, 3, border_mode='same'))
+    model.add(Convolution1D(32, 3, border_mode='same'))
+    model.add(Convolution1D(16, 3, border_mode='same'))
+    model.add(Flatten())
+    model.add(Dropout(0.2))
+    model.add(Dense(180,activation='sigmoid'))
+    model.add(Dropout(0.2))
+    model.add(Dense(1,activation='softmax'))
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-    model.compile(loss='binary_crossentropy',
-                  optimizer='rmsprop')
 
     return model
 
